@@ -1,0 +1,2 @@
+SELECT u.id, u.userName, users.userName AS ParentUserName FROM users
+ JOIN users u ON u.parent = users.id
