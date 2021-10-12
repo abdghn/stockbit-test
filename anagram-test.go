@@ -12,6 +12,7 @@ var (
 
 func Anagram() {
 	list := make(map[string][]string)
+	result := make([][]string , 0)
 
 	for _, word := range dummyDict {
 		key := sortStr(word)
@@ -19,11 +20,13 @@ func Anagram() {
 	}
 
 	for _, words := range list {
+		wordsArr := []string{}
 		for _, w := range words {
-			fmt.Print(w, " ")
+			wordsArr = append(wordsArr, w)
 		}
-		fmt.Println()
+		result = append(result, wordsArr)
 	}
+	fmt.Print(result)
 }
 
 func sortStr(k string) string {
