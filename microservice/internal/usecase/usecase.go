@@ -18,7 +18,8 @@ import (
 )
 
 type Usecase interface {
-	GetMovies() (*model.Response, error)
+	GetMovie(id string) (*model.Movie, error)
+	GetMoviesSearch(pagination string, searchword string) (*model.Response, error)
 }
 
 type usecase struct {
@@ -29,9 +30,9 @@ func New(persistentDB db.Persistent) Usecase {
 	return &usecase{persistentDB: persistentDB}
 }
 
-
-func (u *usecase) GetMovies() (*model.Response, error) {
-	response, err := http.Get("http://www.omdbapi.com/?apikey=faf7e5bb&s=Batman&page=2")
+func (u *usecase) GetMoviesSearch(pagination string, searchword string) (*model.Response, error) {
+	url := fmt.Sprintf("http://www.omdbapi.com/?apikey=faf7e5bb&s=%s&page=%s", searchword, pagination)
+	response, err := http.Get(url)
 	if err != nil {
 		fmt.Print(err.Error())
 		os.Exit(1)
@@ -43,6 +44,28 @@ func (u *usecase) GetMovies() (*model.Response, error) {
 	}
 
 	var responseObject model.Response
+	json.Unmarshal(responseData, &responseObject)
+
+
+	return &responseObject, nil
+
+}
+
+func (u *usecase) GetMovie(id string) (*model.Movie, error) {
+	url := fmt.Sprintf("http://www.omdbapi.com/?apikey=faf7e5bb&i=%s", id)
+	log.Printf(url)
+	response, err := http.Get(url)
+	if err != nil {
+		fmt.Print(err.Error())
+		os.Exit(1)
+	}
+
+	responseData, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var responseObject model.Movie
 	json.Unmarshal(responseData, &responseObject)
 
 

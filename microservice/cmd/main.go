@@ -31,7 +31,8 @@ func main() {
 
 	r := mux.NewRouter()
 	r.HandleFunc("/health", h.HandleHealthCheck).Methods(http.MethodGet, http.MethodHead)
-	r.HandleFunc("/movies", h.HandleGetMovies).Methods(http.MethodGet)
+	r.HandleFunc("/movie", h.HandleSearchMovies).Methods(http.MethodGet)
+	r.HandleFunc("/movie/{id}", h.HandleGetMovie).Methods(http.MethodGet)
 
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, os.Interrupt, os.Kill)
