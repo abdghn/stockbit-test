@@ -19,7 +19,7 @@ import (
 
 type Usecase interface {
 	GetMovie(id string) (*model.Movie, error)
-	GetMoviesSearch(pagination string, searchword string) (*model.Response, error)
+	GetMoviesSearch(pagination string, searchword string) (*model.SearchResponse, error)
 }
 
 type usecase struct {
@@ -30,7 +30,7 @@ func New(persistentDB db.Persistent) Usecase {
 	return &usecase{persistentDB: persistentDB}
 }
 
-func (u *usecase) GetMoviesSearch(pagination string, searchword string) (*model.Response, error) {
+func (u *usecase) GetMoviesSearch(pagination string, searchword string) (*model.SearchResponse, error) {
 	url := fmt.Sprintf("http://www.omdbapi.com/?apikey=faf7e5bb&s=%s&page=%s", searchword, pagination)
 	response, err := http.Get(url)
 	if err != nil {
@@ -43,7 +43,7 @@ func (u *usecase) GetMoviesSearch(pagination string, searchword string) (*model.
 		log.Fatal(err)
 	}
 
-	var responseObject model.Response
+	var responseObject model.SearchResponse
 	json.Unmarshal(responseData, &responseObject)
 
 

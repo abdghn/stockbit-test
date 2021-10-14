@@ -8,9 +8,9 @@ package main
 
 import (
 	"context"
-	"github.com/abdghn/stockbit-test/microservice/internal/handler"
+	"github.com/abdghn/stockbit-test/microservice/internal/handler/http"
 	"github.com/abdghn/stockbit-test/microservice/internal/resource/db"
-	"github.com/abdghn/stockbit-test/microservice/internal/usecase"
+	"github.com/abdghn/stockbit-test/microservice/internal/usecase/http"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -28,6 +28,7 @@ func main() {
 	uc := usecase.New(persistentDB)
 
 	h := handler.New(uc)
+
 
 	r := mux.NewRouter()
 	r.HandleFunc("/health", h.HandleHealthCheck).Methods(http.MethodGet, http.MethodHead)

@@ -8,8 +8,9 @@ package handler
 
 import (
 	"encoding/json"
-	"github.com/abdghn/stockbit-test/microservice/internal/usecase"
+	"github.com/abdghn/stockbit-test/microservice/internal/usecase/http"
 	"github.com/gorilla/mux"
+	"google.golang.org/grpc"
 	"log"
 	"net/http"
 )
@@ -37,6 +38,11 @@ func (h *handler) HandleHealthCheck(w http.ResponseWriter, r *http.Request) {
 func (h *handler) HandleSearchMovies(w http.ResponseWriter, r *http.Request) {
 	pagination := r.URL.Query().Get("pagination")
 	searchword := r.URL.Query().Get("searchword")
+	grpcConn, err := grpc.Dial("localhost:8081", grpc.WithInsecure())
+	if err != nil {
+		log.Println("error when dial grpc. err : ", err.Error())
+	}
+	defer grpcConn.Close()
 	movies, err := h.uc.GetMoviesSearch(pagination, searchword)
 	if err != nil {
 		log.Printf("[handler.HandleGetMovies] unable to find user by id: %v", err)
